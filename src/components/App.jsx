@@ -14,6 +14,7 @@ const App = () => {
   const [filter, setFilter] = useState('');
   const [numberPage, setNumberPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     if (filter.trim() === '') return;
@@ -24,6 +25,7 @@ const App = () => {
 
         const arrayPitures = [...itemPicture.data.hits];
         setPhotos(prevPhoto => [...prevPhoto, ...arrayPitures]);
+        setTotalPages(Math.ceil(itemPicture.data.totalHits / 12))
       } catch (error) {
         console.log(error);
       } finally {
@@ -54,7 +56,7 @@ const App = () => {
       <SearchBar onSubmit={onSubmit}></SearchBar>
       {loading && <Loader></Loader>}
       {!loading && <ImageGallery photoList={photos}></ImageGallery>}
-      {photos.length > 0 && !loading && <Button onClick={onAddMore}></Button>}
+      {photos.length > 0 && totalPages !== numberPage && !loading &&  <Button onClick={onAddMore}></Button>}
     </div>
   );
 };
